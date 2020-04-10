@@ -5664,10 +5664,11 @@ void _FCI_Inspect_EncapLocation (HObject ho_Image, HObject ho_DeviceLocation, HO
 }
 
 void _FCI_Inspect_EncapLocation_Magnus(HObject ho_Image, HObject ho_DeviceLocation, HObject ho_CropRemoveBlackLineMask_magnus,
-	HObject ho_CropSmoothEncap_magnus, HObject *ho_EncapLocation_final_magnus, HObject *ho_DebugImageOut, HObject *ho_DebugRegionOut, HTuple hv_IsStepMode, HTuple hWireColor, HTuple nThreshMax_Black_magnus, HTuple nThreshMin_White_magnus,
-	HTuple nX_Dilation_White_magnus, HTuple nY_Dilation_White_magnus, HTuple nX_Opening_fill_magnus, HTuple nY_Opening_fill_magnus, HTuple nValueOpening_Circle_magnus,
-	HTuple nValue_OpeningCircleCrop_magnus, HTuple nValueSmooth_Crop_magnus,
-	HTuple *hv_IsPassEncap, HTuple *hv_DebugMessageOut)
+		HObject ho_CropSmoothEncap_magnus, HObject *ho_EncapLocation_final_magnus, HObject *ho_DebugImageOut, HObject *ho_DebugRegionOut, 
+		HTuple hv_IsStepMode, HTuple hWireColor, HTuple nThreshMax_Black_magnus, HTuple nThreshMin_White_magnus,
+		HObject ho_DilationKernel_magnus, HObject ho_OpeningKernel_magnus,
+		HTuple nValueOpening_Circle_magnus, HObject ho_EllipseOpening_kernel, HTuple nValueSmooth_Crop_magnus,
+		HTuple *hv_IsPassEncap, HTuple *hv_DebugMessageOut)
 {
 
 	HRegion		hRegion_EncapRemoveMask_magnus, hRegion_CropSmoothEncap_magnus, hRegion_CropNoSmoothEncap_magnus,
@@ -5699,13 +5700,14 @@ void _FCI_Inspect_EncapLocation_Magnus(HObject ho_Image, HObject ho_DeviceLocati
 	Threshold(hCrop_image_magnus, &hWhite_Region_magnus, nThreshMin_White_magnus, 255);
 
 	/////////// Dilate White Region to remove intersection line between black and white region ///////////
-	DilationRectangle1(hWhite_Region_magnus, &hDilation_WhiteRegion_magnus, nX_Dilation_White_magnus, nY_Dilation_White_magnus);
-
+	
+	//Dilation1(hWhite_Region_magnus, ho_DilationKernel_magnus, &hDilation_WhiteRegion_magnus,1);
+	
 	/////////// Union White and Black  and Remove BlackLine region//////////////
-	Union2(hBlack_Region_magnus, hDilation_WhiteRegion_magnus, &hUnionRegion_WhiteBlack_magnus);
+	Union2(hBlack_Region_magnus, hWhite_Region_magnus, &hUnionRegion_WhiteBlack_magnus);
 
 	Difference(hRegion_EncapRemoveMask_magnus, hUnionRegion_WhiteBlack_magnus, &hDiffRegion_magnus);
-	OpeningRectangle1(hDiffRegion_magnus, &hRegionOpening_fill_magnus, nX_Opening_fill_magnus, nY_Opening_fill_magnus);
+	Opening(hDiffRegion_magnus,ho_OpeningKernel_magnus, &hRegionOpening_fill_magnus);
 
 	if (0 != hv_IsStepMode)
 	{
@@ -5731,7 +5733,7 @@ void _FCI_Inspect_EncapLocation_Magnus(HObject ho_Image, HObject ho_DeviceLocati
 	//////////////////// gen Crop smooth contour to intersection/////////////
 
 	/// Opening to smooth corner before use smoothContour
-	OpeningCircle(hRegionOpening_Circle_magnus, &hRegionOpening_CircleCrop_magnus, nValue_OpeningCircleCrop_magnus);
+	Opening(hRegionOpening_Circle_magnus, ho_EllipseOpening_kernel, &hRegionOpening_CircleCrop_magnus);
 
 	// Crop contour to smooth
 	GenContourRegionXld(hRegionOpening_CircleCrop_magnus, &hContour_Encap_magnus, "center");
@@ -5755,7 +5757,16 @@ void _FCI_Inspect_EncapLocation_Magnus(HObject ho_Image, HObject ho_DeviceLocati
 
 	//////////// Union Smooth and NoSmooth Region
 	Union2(hRegionInter_CropNoSmooth_magnus, hRegionInter_CropSmooth_magnus, &hRegionUnion_2RegionSmooth_magnus);
-	OpeningCircle(hRegionUnion_2RegionSmooth_magnus, &(*ho_EncapLocation_final_magnus), nValueOpening_Circle_magnus);
+	HRegion hRegionOpening_AfterSmooth_magnus, hRegionConnection_AfterSmooth_magnus, hRegionSelect_AfterSmooth_magnus;
+	HTuple n_count;
+	OpeningCircle(hRegionUnion_2RegionSmooth_magnus, &hRegionOpening_AfterSmooth_magnus, nValueOpening_Circle_magnus);
+	Connection(hRegionOpening_AfterSmooth_magnus, &hRegionConnection_AfterSmooth_magnus);
+	SelectShape(hRegionConnection_AfterSmooth_magnus, &hRegionSelect_AfterSmooth_magnus, "width", "and", 0.5*hv_WidthOfEncap, hv_WidthOfEncap);
+	CountObj(hRegionSelect_AfterSmooth_magnus, &n_count);
+	if (n_count == 1)
+	{
+		SelectObj(hRegionSelect_AfterSmooth_magnus, &(*ho_EncapLocation_final_magnus),1);
+	}
 	if (0 != hv_IsStepMode)
 	{
 		hv_Message = "Segmented final magnus";

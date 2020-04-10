@@ -482,8 +482,8 @@ public:
 	//////////Encap Magnus Teach parameter 
 
 	BOOL bEnable_EncapManus;
-	int nThreshMin_EncapManus;
-	int nThreshMax_EncapManus;
+//	int nThreshMin_EncapManus;
+//	int nThreshMax_EncapManus;
 
 	CRect hRect_DeviceLocationEncap_magnus;
 	CRect hRect_EncapLocation_magnus;
@@ -491,13 +491,13 @@ public:
 	CRect hRect_CropNoSmoothEncap_magnus;
 	CRect hRect_CropRemoveBlackLine_magnus;
 
-	int nCrop_ExpandLeft_magnus[2];
-	int nCrop_ExpandRight_magnus[2];
-	int nCrop_ExpandHeight_magnus[2];
-	int nCrop_Smooth_EncapManus[2];
-	int nCrop_RemoveBLLeft_magnus[2];
-	int nCrop_RemoveBLRight_magnus[2];
-	int nCrop_RemoveBLHeight_magnus[2];
+	//int nCrop_ExpandLeft_magnus[2];
+	//int nCrop_ExpandRight_magnus[2];
+	//int nCrop_ExpandHeight_magnus[2];
+	//int nCrop_Smooth_EncapManus[2];
+	//int nCrop_RemoveBLLeft_magnus[2];
+	//int nCrop_RemoveBLRight_magnus[2];
+	//int nCrop_RemoveBLHeight_magnus[2];
 
 	int nDilateX_EncapManus;
 	int nDilateY_EncapManus;
@@ -507,7 +507,7 @@ public:
 	int nValue_OpeningCircle_magnus;
 	int nValue_OpeningCircleCrop_magnus;
 	int nValue_Smooth_EncapMagnus;
-	int nArea_Object_EncapManus;
+//	int nArea_Object_EncapManus;
 	int nHeight_Object_magnus;
 	int nWidth_Object_magnus;
 
@@ -598,12 +598,12 @@ public:
 	CEncapMagnus();
 
 
-	int Thresh[2];
-	int Crop_Expand[2];
-	int Dilate_Kernel[2];
-	int Opening_Kernel[2];
-	int Crop_Smooth;
-	int Area_Object;
+	//int Thresh[2];
+	//int Crop_Expand[2];
+	//int Dilate_Kernel[2];
+	//int Opening_Kernel[2];
+	//int Crop_Smooth;
+	//int Area_Object;
 	BOOL bEnable;
 
 

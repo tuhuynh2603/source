@@ -190,16 +190,16 @@ CDieEdge::CDieEdge() : CParameterCore("Die Edge", "DieEdge", -DIE_EDGE)
 CEncapMagnus::CEncapMagnus() : CParameterCore("Encap Magnus", "EncapMagnus", -ENCAP_MAGNUS)
 {
 	bEnable = FALSE;
-	Thresh[0] = 40;
-	Thresh[1] = 220;
-	Crop_Expand[0] = 220;
-	Crop_Expand[1] = 220;
-	Dilate_Kernel[0] = 7;
-	Dilate_Kernel[1] = 1;
-	Opening_Kernel[0] = 1;
-	Opening_Kernel[1] = 7;
-	Crop_Smooth = 151;
-	Area_Object = 999999;
+	//Thresh[0] = 40;
+	//Thresh[1] = 220;
+	//Crop_Expand[0] = 220;
+	//Crop_Expand[1] = 220;
+	//Dilate_Kernel[0] = 7;
+	//Dilate_Kernel[1] = 1;
+	//Opening_Kernel[0] = 1;
+	//Opening_Kernel[1] = 7;
+	//Crop_Smooth = 151;
+	//Area_Object = 999999;
 }
 CTrainingData::CTrainingData()
 {
@@ -279,24 +279,24 @@ CTrainingData::CTrainingData()
 //
 		//////Bottom encap magnus 
 	bEnable_EncapManus = FALSE;
-	nThreshMin_EncapManus = 140;
-	nThreshMax_EncapManus = 255;
+	//nThreshMin_EncapManus = 140;
+	//nThreshMax_EncapManus = 255;
 	nThreshMin_Black_EncapManus = 0;
 	nThreshMax_Black_EncapManus = 35;
 	nThreshMin_White_EncapManus = 220;
 	nThreshMax_White_EncapManus = 255;
 
-	for (int i = 0; i <= 1; i++)
-	{
-		nCrop_ExpandLeft_magnus[i] = 200;
-		nCrop_ExpandRight_magnus[i] = 200;
-		nCrop_ExpandHeight_magnus[i] = 200;
-		nCrop_Smooth_EncapManus[i] = 30;
+	//for (int i = 0; i <= 1; i++)
+	//{
+	//	nCrop_ExpandLeft_magnus[i] = 200;
+	//	nCrop_ExpandRight_magnus[i] = 200;
+	//	nCrop_ExpandHeight_magnus[i] = 200;
+	//	nCrop_Smooth_EncapManus[i] = 30;
 
-		nCrop_RemoveBLLeft_magnus[i] = 200;
-		nCrop_RemoveBLRight_magnus[i] = 200;
-		nCrop_RemoveBLHeight_magnus[i] = 30;
-	}
+	//	nCrop_RemoveBLLeft_magnus[i] = 200;
+	//	nCrop_RemoveBLRight_magnus[i] = 200;
+	//	nCrop_RemoveBLHeight_magnus[i] = 30;
+	//}
 
 	hRect_DeviceLocationEncap_magnus = CRect(0, 0, 0, 0);
 	hRect_EncapLocation_magnus = CRect(0, 0, 0, 0);
@@ -314,7 +314,7 @@ CTrainingData::CTrainingData()
 	nValue_OpeningCircleCrop_magnus = 10;
 
 	nValue_Smooth_EncapMagnus = 75;
-	nArea_Object_EncapManus = 999999;
+	//nArea_Object_EncapManus = 999999;
 	nHeight_Object_magnus = 1300;
 	nWidth_Object_magnus = 1100;
 
@@ -1540,11 +1540,19 @@ int CInspectionCore::Teach(HImage hImages,
 	HTuple nThreshMin_White_magnus = m_TrainingData.nThreshMin_White_EncapManus;
 	HTuple nX_Dilation_White_magnus = m_TrainingData.nDilateX_EncapManus;
 	HTuple nY_Dilation_White_magnus = m_TrainingData.nDilateY_EncapManus;
-	HTuple nX_Opening_fill_magnus = m_TrainingData.nOpeningX_EncapManus;
-	HTuple nY_Opening_fill_magnus = m_TrainingData.nOpeningY_EncapManus;
+	HTuple nX_Opening_magnus = m_TrainingData.nOpeningX_EncapManus;
+	HTuple nY_Opening_magnus = m_TrainingData.nOpeningY_EncapManus;
 	HTuple nValueOpening_Circle_magnus = m_TrainingData.nValue_OpeningCircle_magnus;
 	HTuple nValue_OpeningCircleCrop_magnus = m_TrainingData.nValue_OpeningCircleCrop_magnus;
 	HTuple nValueSmooth_Crop_magnus = m_TrainingData.nValue_Smooth_EncapMagnus;
+	
+	HRegion HRegion_EllipseOpening_kernel, HRegion_DilationKernel_magnus, HRegion_OpeningKernel_magnus;
+	GenEllipse(&HRegion_EllipseOpening_kernel, 1000, 1000, hInspectRotationAngle,
+		nValue_OpeningCircleCrop_magnus, 0.5*nValue_OpeningCircleCrop_magnus);
+	GenRectangle2(&HRegion_DilationKernel_magnus, 1000, 1000, hInspectRotationAngle,
+		nX_Dilation_White_magnus, nY_Dilation_White_magnus);
+	GenRectangle2(&HRegion_OpeningKernel_magnus, 1000, 1000, hInspectRotationAngle,
+		nX_Opening_magnus, nY_Opening_magnus);
 
 	GenRectangle1(&hRegion_EncapLocation_magnus,
 		m_TrainingData.hRect_EncapLocation_magnus.top,
@@ -1584,8 +1592,8 @@ int CInspectionCore::Teach(HImage hImages,
 	hWireColor = nCurTrack;
 	_FCI_Inspect_EncapLocation_Magnus(hImages, hRegion_EncapLocation_magnus, hRegion_CropRemoveBlackLineMask_magnus, 
 		hRegion_CropSmoothEncap_magnus, &hEncapLocation_final_magnus, &hDebugImg, &hDebugRgn, nStepDebug, hWireColor, nThreshMax_Black_magnus, nThreshMin_White_magnus,
-		nX_Dilation_White_magnus, nY_Dilation_White_magnus, nX_Opening_fill_magnus, nY_Opening_fill_magnus, nValueOpening_Circle_magnus, 
-		nValue_OpeningCircleCrop_magnus, nValueSmooth_Crop_magnus,
+		HRegion_DilationKernel_magnus, HRegion_OpeningKernel_magnus,
+		nValueOpening_Circle_magnus, HRegion_EllipseOpening_kernel,nValueSmooth_Crop_magnus,
 		&hIsEncap, &hDebugMsg);
 	
 	m_arrayOverlayTeach.Add(hEncapLocation_final_magnus, colorGreen);
@@ -3363,11 +3371,19 @@ int CInspectionCore::Inspect(HImage hImage,
 			HTuple nThreshMin_White_magnus = m_TrainingData.nThreshMin_White_EncapManus;
 			HTuple nX_Dilation_White_magnus = m_TrainingData.nDilateX_EncapManus;
 			HTuple nY_Dilation_White_magnus = m_TrainingData.nDilateY_EncapManus;
-			HTuple nX_Opening_fill_magnus = m_TrainingData.nOpeningX_EncapManus;
-			HTuple nY_Opening_fill_magnus = m_TrainingData.nOpeningY_EncapManus;
+			HTuple nX_Opening_magnus = m_TrainingData.nOpeningX_EncapManus;
+			HTuple nY_Opening_magnus = m_TrainingData.nOpeningY_EncapManus;
 			HTuple nValueOpening_Circle_magnus = m_TrainingData.nValue_OpeningCircle_magnus;
 			HTuple nValue_OpeningCircleCrop_magnus = m_TrainingData.nValue_OpeningCircleCrop_magnus;
 			HTuple nValueSmooth_Crop_magnus = m_TrainingData.nValue_Smooth_EncapMagnus;
+
+			HRegion HRegion_EllipseOpening_kernel, HRegion_DilationKernel_magnus, HRegion_OpeningKernel_magnus;
+			GenEllipse(&HRegion_EllipseOpening_kernel, 1000, 1000, hInspectRotationAngle,
+				nValue_OpeningCircleCrop_magnus, 0.7*nValue_OpeningCircleCrop_magnus);
+			GenRectangle2(&HRegion_DilationKernel_magnus, 1000, 1000, hInspectRotationAngle,
+				nX_Dilation_White_magnus, nY_Dilation_White_magnus);
+			GenRectangle2(&HRegion_OpeningKernel_magnus, 1000, 1000, hInspectRotationAngle,
+				nX_Opening_magnus, nY_Opening_magnus);
 
 			GenRectangle1(&hRegion_EncapLocation_magnus,
 				m_TrainingData.hRect_EncapLocation_magnus.top,
@@ -3391,27 +3407,35 @@ int CInspectionCore::Inspect(HImage hImage,
 			_FCI_Encap_RegionProjection(hImage, hRegion_EncapLocation_magnus,
 				&hRegion_EncapLocation_magnus, &hDebugImageOutEncap, &hDebugRegionOutEncap, nStepDebug,
 				hDeviceCenterRow, hDeviceCenterCol, hInspectRotationAngle, hInspectShiftAlongRow, hInspectShiftAlongCol, &hDebugMsgOutEncap);
-
+			if (nStepDebug) {
+				StepDebug(hDebugImageOutEncap, hDebugRegionOutEncap, colorCyan, hDebugMsgOutEncap, bRegionInsp);
+			}
 			_FCI_Encap_RegionProjection(hImage, hRegion_CropRemoveBlackLineMask_magnus,
 				&hRegion_CropRemoveBlackLineMask_magnus, &hDebugImageOutEncap, &hDebugRegionOutEncap, nStepDebug,
 				hDeviceCenterRow, hDeviceCenterCol, hInspectRotationAngle, hInspectShiftAlongRow, hInspectShiftAlongCol, &hDebugMsgOutEncap);
-
+			if (nStepDebug) {
+				StepDebug(hDebugImageOutEncap, hDebugRegionOutEncap, colorCyan, hDebugMsgOutEncap, bRegionInsp);
+			}
 			_FCI_Encap_RegionProjection(hImage, hRegion_CropSmoothEncap_magnus,
 				&hRegion_CropSmoothEncap_magnus, &hDebugImageOutEncap, &hDebugRegionOutEncap, nStepDebug,
 				hDeviceCenterRow, hDeviceCenterCol, hInspectRotationAngle, hInspectShiftAlongRow, hInspectShiftAlongCol, &hDebugMsgOutEncap);
-
+			if (nStepDebug) {
+				StepDebug(hDebugImageOutEncap, hDebugRegionOutEncap, colorCyan, hDebugMsgOutEncap, bRegionInsp);
+			}
 
 			HImage hDebugImg;
 			HRegion hEncapLocation_final_magnus, hDebugRgn;
 			HTuple hIsEncap, hDebugMsg, hWireColor;
 			hWireColor = nCurTrack;
 			_FCI_Inspect_EncapLocation_Magnus(hImage, hRegion_EncapLocation_magnus, hRegion_CropRemoveBlackLineMask_magnus,
-				hRegion_CropSmoothEncap_magnus, &hEncapLocation_final_magnus, &hDebugImg, &hDebugRgn, nStepDebug, hWireColor,nThreshMax_Black_magnus, nThreshMin_White_magnus,
-				nX_Dilation_White_magnus, nY_Dilation_White_magnus, nX_Opening_fill_magnus, nY_Opening_fill_magnus, nValueOpening_Circle_magnus,
-				nValue_OpeningCircleCrop_magnus, nValueSmooth_Crop_magnus,
-				&hIsEncap, &hDebugMsg);
-
-			m_arrayOverlayInspection.Add(hEncapLocation_final_magnus, colorGreen);
+				hRegion_CropSmoothEncap_magnus, &hEncapLocation_final_magnus, &hDebugImg, &hDebugRgn, nStepDebug, hWireColor,nThreshMax_Black_magnus, 
+				nThreshMin_White_magnus, HRegion_DilationKernel_magnus, HRegion_OpeningKernel_magnus,
+				nValueOpening_Circle_magnus, HRegion_EllipseOpening_kernel, nValueSmooth_Crop_magnus, &hIsEncap, &hDebugMsg);
+			//if (hIsEncap == TRUE)
+			//{
+				m_arrayOverlayInspection.Add(hEncapLocation_final_magnus, colorGreen);
+			//}
+			//else return -ENCAP_MAGNUS;
 		}
 		//// Cover layer (Doc - 4th intensity) ////
 		//HTuple hCoverLayerImgIndex = -1;

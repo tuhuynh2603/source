@@ -673,31 +673,34 @@ void CInspectionHandler::CreateTeachParmList(/*int nTrack, int nDoc, int nFOV*/)
 	pParm = new CParameters();
 	pParm->strInspection = "Teach Encap Magnus";
 	pParm->Add(new CParmInfo(&pData->bEnable_EncapManus, "Enable", TBOOL, "", 0, 1, "", "Enable Encap MagnusPam"));
-	pParm->Add(new CParmInfo(&pData->nThreshMin_EncapManus, "Min Thresh", TINT, "", 0, 255, "", "Thresh"));
-	pParm->Add(new CParmInfo(&pData->nThreshMax_EncapManus, "Max Thresh", TINT, "", 0, 255, "", "Thresh"));
+	//pParm->Add(new CParmInfo(&pData->nThreshMin_EncapManus, "Min Thresh", TINT, "", 0, 255, "", "Thresh"));
+	//pParm->Add(new CParmInfo(&pData->nThreshMax_EncapManus, "Max Thresh", TINT, "", 0, 255, "", "Thresh"));
 	//	pParm->Add(new CParmInfo(&pData->nArea_Object_EncapManus, "Area Object", TINT, "", 0, 99999999, "", "Area_Object"));
-	pParm->Add(new CParmInfo(&pData->nHeight_Object_magnus, "Area Height ", TINT, "", 300, 10000, "", "Area_Height"));
-	pParm->Add(new CParmInfo(&pData->nWidth_Object_magnus, "Area Width", TINT, "", 300, 10000, "", "Area_Width"));
+	//pParm->Add(new CParmInfo(&pData->nHeight_Object_magnus, "Area Height ", TINT, "", 300, 10000, "", "Area_Height"));
+	//pParm->Add(new CParmInfo(&pData->nWidth_Object_magnus, "Area Width", TINT, "", 300, 10000, "", "Area_Width"));
 
 	//	pParm->Add(new CParmInfo(&pData->nCropW_Expand_EncapManus, "Crop Expand Width", TINT, "", 0, 500, "", "Crop Expand"));
 	//	pParm->Add(new CParmInfo(&pData->nCropH_Expand_EncapManus, "Crop Expand Height", TINT, "", 0, 500, "", "Crop Expand"));
 
 	//	pParm->Add(new CParmInfo(&pData->nDilateX_EncapManus, "Dilate Kernel Width", TINT, "", 1, 50, "", "Dilate_Kernel"));
-	pParm->Add(new CParmInfo(&pData->nDilateY_EncapManus, "Dilate Kernel Height", TINT, "", 1, 50, "", "Dilate_Kernel"));
+	//pParm->Add(new CParmInfo(&pData->nDilateY_EncapManus, "Dilate Kernel Height", TINT, "", 1, 50, "", "Dilate_Kernel"));
+	pParm->Add(new CParmInfo(&pData->nThreshMax_Black_EncapManus, "Black Region Thresh ", TINT, "", 0, 255, "", "Thresh_Black"));
+	pParm->Add(new CParmInfo(&pData->nThreshMin_White_EncapManus, "White Region Thresh ", TINT, "", 0, 255, "", "Thresh_White"));
 
-	pParm->Add(new CParmInfo(&pData->nOpeningX_EncapManus, "Opening Kernel Width", TINT, "", 1, 300, "", "Opening_Kernel"));
+	//pParm->Add(new CParmInfo(&pData->nOpeningX_EncapManus, "Opening Kernel Width", TINT, "", 1, 300, "", "OpeningRectWidth_Kernel"));
 	//	pParm->Add(new CParmInfo(&pData->nOpeningY_EncapManus, "Opening Kernel Height", TINT, "", 1, 100, "", "Opening_Kernel"));
-	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircle_magnus, "Value Opening Encap", TINT, "", 1, 200, "", "Opening_Circle_Kernel"));
-	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircleCrop_magnus, "Value Opening Crop", TINT, "", 1, 200, "", "Opening_Circle_Kernel"));
+	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircle_magnus, "Smooth Value ", TINT, "", 1, 100, "", "Opening_Circle_Kernel"));
+	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircle_magnus, "X Smooth Value ", TINT, "", 1, 100, "", "Opening_Circle_Kernel"));
+	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircle_magnus, "Y Smooth Value ", TINT, "", 1, 100, "", "Opening_Circle_Kernel"));
+
+	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircleCrop_magnus, "Corner Smooth Value 1", TINT, "", 1, 100, "", "Opening_Circle_Kernel"));
 
 
 	//	pParm->Add(new CParmInfo(&pData->nCrop_Smooth_EncapManus, "Crop Height Smooth", TINT, "", 5, 200, "", "Crop_Height"));
-	pParm->Add(new CParmInfo(&pData->nValue_Smooth_EncapMagnus, "Value Smooth", TINT, "", 1, 500, "", "Smooth_Value"));
+	pParm->Add(new CParmInfo(&pData->nValue_Smooth_EncapMagnus, " Corner Smooth Value 2", TINT, "", 1, 500, "", "Smooth_Value"));
 
 
 	//	pParm->Add(new CParmInfo(&pData->nThreshMin_Black_EncapManus, "Thresh Black Min", TINT, "", 0, 255, "", "Thresh_Black"));
-	pParm->Add(new CParmInfo(&pData->nThreshMax_Black_EncapManus, "Thresh Black Region", TINT, "", 0, 255, "", "Thresh_Black"));
-	pParm->Add(new CParmInfo(&pData->nThreshMin_White_EncapManus, "Thresh White Region", TINT, "", 0, 255, "", "Thresh_White"));
 	//	pParm->Add(new CParmInfo(&pData->nThreshMax_White_EncapManus, "Thesh White Max", TINT, "", 0, 255, "", "Thresh_White"));
 
 
