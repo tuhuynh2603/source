@@ -279,24 +279,6 @@ CTrainingData::CTrainingData()
 //
 		//////Bottom encap magnus 
 	bEnable_EncapManus = FALSE;
-	//nThreshMin_EncapManus = 140;
-	//nThreshMax_EncapManus = 255;
-	nThreshMin_Black_EncapManus = 0;
-	nThreshMax_Black_EncapManus = 35;
-	nThreshMin_White_EncapManus = 220;
-	nThreshMax_White_EncapManus = 255;
-
-	//for (int i = 0; i <= 1; i++)
-	//{
-	//	nCrop_ExpandLeft_magnus[i] = 200;
-	//	nCrop_ExpandRight_magnus[i] = 200;
-	//	nCrop_ExpandHeight_magnus[i] = 200;
-	//	nCrop_Smooth_EncapManus[i] = 30;
-
-	//	nCrop_RemoveBLLeft_magnus[i] = 200;
-	//	nCrop_RemoveBLRight_magnus[i] = 200;
-	//	nCrop_RemoveBLHeight_magnus[i] = 30;
-	//}
 
 	hRect_DeviceLocationEncap_magnus = CRect(0, 0, 0, 0);
 	hRect_EncapLocation_magnus = CRect(0, 0, 0, 0);
@@ -306,17 +288,18 @@ CTrainingData::CTrainingData()
 
 
 	nDilateX_EncapManus = 1;
-	nDilateY_EncapManus = 10;
+	nDilateY_EncapManus = 3;
 
-	nOpeningX_EncapManus = 10;
+	nOpeningX_EncapManus = 20;
 	nOpeningY_EncapManus = 1;
-	nValue_OpeningCircle_magnus = 10;
-	nValue_OpeningCircleCrop_magnus = 10;
+	nValue_OpeningCircle_magnus = 40;
+	nValue_OpeningCircleCrop_magnus = 60;
+	nValue_Smooth_EncapMagnus = 50;
 
-	nValue_Smooth_EncapMagnus = 75;
-	//nArea_Object_EncapManus = 999999;
-	nHeight_Object_magnus = 1300;
-	nWidth_Object_magnus = 1100;
+	nThreshMin_Black_EncapManus = 0;
+	nThreshMax_Black_EncapManus = 25;
+	nThreshMin_White_EncapManus = 220;
+	nThreshMax_White_EncapManus = 255;
 
 
 // cover layer //
@@ -3369,21 +3352,22 @@ int CInspectionCore::Inspect(HImage hImage,
 			HTuple  hv_WidthOfEncap, hv_EncapArea;
 			HTuple nThreshMax_Black_magnus = m_TrainingData.nThreshMax_Black_EncapManus;
 			HTuple nThreshMin_White_magnus = m_TrainingData.nThreshMin_White_EncapManus;
-			HTuple nX_Dilation_White_magnus = m_TrainingData.nDilateX_EncapManus;
+			//HTuple nX_Dilation_White_magnus = 1;
 			HTuple nY_Dilation_White_magnus = m_TrainingData.nDilateY_EncapManus;
 			HTuple nX_Opening_magnus = m_TrainingData.nOpeningX_EncapManus;
-			HTuple nY_Opening_magnus = m_TrainingData.nOpeningY_EncapManus;
+			//HTuple nY_Opening_magnus = 1;
 			HTuple nValueOpening_Circle_magnus = m_TrainingData.nValue_OpeningCircle_magnus;
 			HTuple nValue_OpeningCircleCrop_magnus = m_TrainingData.nValue_OpeningCircleCrop_magnus;
 			HTuple nValueSmooth_Crop_magnus = m_TrainingData.nValue_Smooth_EncapMagnus;
 
+			//Get Kernel with Angle rotate
 			HRegion HRegion_EllipseOpening_kernel, HRegion_DilationKernel_magnus, HRegion_OpeningKernel_magnus;
 			GenEllipse(&HRegion_EllipseOpening_kernel, 1000, 1000, hInspectRotationAngle,
 				nValue_OpeningCircleCrop_magnus, 0.7*nValue_OpeningCircleCrop_magnus);
 			GenRectangle2(&HRegion_DilationKernel_magnus, 1000, 1000, hInspectRotationAngle,
-				nX_Dilation_White_magnus, nY_Dilation_White_magnus);
+				1, nY_Dilation_White_magnus);
 			GenRectangle2(&HRegion_OpeningKernel_magnus, 1000, 1000, hInspectRotationAngle,
-				nX_Opening_magnus, nY_Opening_magnus);
+				nX_Opening_magnus, 1);
 
 			GenRectangle1(&hRegion_EncapLocation_magnus,
 				m_TrainingData.hRect_EncapLocation_magnus.top,
@@ -3425,17 +3409,17 @@ int CInspectionCore::Inspect(HImage hImage,
 
 			HImage hDebugImg;
 			HRegion hEncapLocation_final_magnus, hDebugRgn;
-			HTuple hIsEncap, hDebugMsg, hWireColor;
+			HTuple hIsEncap = FALSE, hDebugMsg, hWireColor;
 			hWireColor = nCurTrack;
 			_FCI_Inspect_EncapLocation_Magnus(hImage, hRegion_EncapLocation_magnus, hRegion_CropRemoveBlackLineMask_magnus,
 				hRegion_CropSmoothEncap_magnus, &hEncapLocation_final_magnus, &hDebugImg, &hDebugRgn, nStepDebug, hWireColor,nThreshMax_Black_magnus, 
 				nThreshMin_White_magnus, HRegion_DilationKernel_magnus, HRegion_OpeningKernel_magnus,
 				nValueOpening_Circle_magnus, HRegion_EllipseOpening_kernel, nValueSmooth_Crop_magnus, &hIsEncap, &hDebugMsg);
-			//if (hIsEncap == TRUE)
-			//{
+			if (hIsEncap == TRUE)
+			{
 				m_arrayOverlayInspection.Add(hEncapLocation_final_magnus, colorGreen);
-			//}
-			//else return -ENCAP_MAGNUS;
+			}
+			else return -ENCAP_MAGNUS;
 		}
 		//// Cover layer (Doc - 4th intensity) ////
 		//HTuple hCoverLayerImgIndex = -1;

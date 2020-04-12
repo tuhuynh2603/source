@@ -689,15 +689,15 @@ void CInspectionHandler::CreateTeachParmList(/*int nTrack, int nDoc, int nFOV*/)
 
 	//pParm->Add(new CParmInfo(&pData->nOpeningX_EncapManus, "Opening Kernel Width", TINT, "", 1, 300, "", "OpeningRectWidth_Kernel"));
 	//	pParm->Add(new CParmInfo(&pData->nOpeningY_EncapManus, "Opening Kernel Height", TINT, "", 1, 100, "", "Opening_Kernel"));
-	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircle_magnus, "Smooth Value ", TINT, "", 1, 100, "", "Opening_Circle_Kernel"));
-	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircle_magnus, "X Smooth Value ", TINT, "", 1, 100, "", "Opening_Circle_Kernel"));
-	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircle_magnus, "Y Smooth Value ", TINT, "", 1, 100, "", "Opening_Circle_Kernel"));
+	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircle_magnus, "Smooth Radius ", TINT, "", 1, 100, "", "Smooth Encap with interpolation curve "));
+	//pParm->Add(new CParmInfo(&pData->nDilateY_EncapManus, "Offset value", TINT, "", 1, 10, "", "Offset Top Encap "));
+	//pParm->Add(new CParmInfo(&pData->nOpeningX_EncapManus, "Y Smooth Value ", TINT, "", 1, 100, "", "Smooth Encap with Y Direction"));
 
-	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircleCrop_magnus, "Corner Smooth Value 1", TINT, "", 1, 100, "", "Opening_Circle_Kernel"));
+	pParm->Add(new CParmInfo(&pData->nValue_OpeningCircleCrop_magnus, "Corner Radius", TINT, "", 1, 120, "", "Radius of Corner to remove "));
 
 
 	//	pParm->Add(new CParmInfo(&pData->nCrop_Smooth_EncapManus, "Crop Height Smooth", TINT, "", 5, 200, "", "Crop_Height"));
-	pParm->Add(new CParmInfo(&pData->nValue_Smooth_EncapMagnus, " Corner Smooth Value 2", TINT, "", 1, 500, "", "Smooth_Value"));
+	pParm->Add(new CParmInfo(&pData->nValue_Smooth_EncapMagnus, " Corner Smooth Radius", TINT, "", 1, 500, "", "Smooth Corner with interpolation curve "));
 
 
 	//	pParm->Add(new CParmInfo(&pData->nThreshMin_Black_EncapManus, "Thresh Black Min", TINT, "", 0, 255, "", "Thresh_Black"));

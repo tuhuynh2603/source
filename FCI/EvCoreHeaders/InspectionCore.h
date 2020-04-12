@@ -501,15 +501,14 @@ public:
 
 	int nDilateX_EncapManus;
 	int nDilateY_EncapManus;
-
 	int nOpeningX_EncapManus;
 	int nOpeningY_EncapManus;
 	int nValue_OpeningCircle_magnus;
 	int nValue_OpeningCircleCrop_magnus;
 	int nValue_Smooth_EncapMagnus;
 //	int nArea_Object_EncapManus;
-	int nHeight_Object_magnus;
-	int nWidth_Object_magnus;
+//	int nHeight_Object_magnus;
+//	int nWidth_Object_magnus;
 
 	int nThreshMin_Black_EncapManus;
 	int nThreshMax_Black_EncapManus;
